@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 ### Added
+- **Phase 3: Local Webinar Functionality (API-Free / DEMO)**:
+  - Browser-native camera and microphone hook (`src/hooks/useLocalMedia.ts`) utilizing standard Web MediaStream API (`navigator.mediaDevices.getUserMedia()`).
+  - Safe media control lifecycle: camera toggling, mic muting, dynamic track additions/removals, Web Audio API analyser audio-level detection, and mandatory component unmount cleanup (`track.stop()`) preventing memory or device leaks.
+  - Native local video preview in Host Studio (`<video autoPlay playsInline muted />`) rendering genuine local webcam stream when active, and reverting to standby placeholder when inactive.
+  - Native display capture (`navigator.mediaDevices.getDisplayMedia()`) powering local screen sharing with track end-event handling and picture-in-picture host camera integration.
+  - Device Diagnostics & Settings modal (`src/components/DeviceSettingsModal.tsx`) allowing audio and video input device selection (`enumerateDevices()`) and live microphone level bar.
+  - Reactive interactive state store (`src/lib/interactiveStore.ts`) supporting local Chat message feeds, Poll creation and real-time audience voting with percentage bars, and Q&A submission, upvoting, and host response tagging.
+  - Controlled simulated participant list clearly tagged `[SIMULATED ATTENDEE]` displayed alongside real local store registrations.
+  - Complete English and Hindi bilingual coverage for all hardware permissions, device settings, polls, and Q&A elements in `src/lib/i18n.ts`.
+  - Comprehensive Playwright test suite (`tests/phase3-local-functionality.spec.ts`) with 14 automated tests covering camera/mic toggling, loopback video verification, screen sharing, device modals, polls, Q&A, chat, cleanup, and 5 responsive viewports (320px, 375px, 768px, 1024px, 1440px). Full suite now passes 40/40 tests.
 - **Phase 2: Webinar Management & Room UI**:
   - Centralized client-side state store (`src/lib/webinarStore.ts`) implementing robust reactive subscriptions via `useSyncExternalStore` and localStorage persistence.
   - Full webinar lifecycle state machine enforcing strict transitions: `DRAFT` → `SCHEDULED` → `LIVE` → `ENDED`, with protection against invalid transitions (e.g. DRAFT directly to LIVE, or transitioning ENDED sessions).

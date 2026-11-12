@@ -79,6 +79,30 @@ export interface Translations {
   registrationClosedDraft: string;
   registrationClosedEnded: string;
   footerRights: string;
+  deviceSettingsTitle: string;
+  deviceSettingsSubtitle: string;
+  selectCamera: string;
+  selectMicrophone: string;
+  startScreenShare: string;
+  stopScreenShare: string;
+  screenShareActive: string;
+  createPollTitle: string;
+  pollQuestionPlaceholder: string;
+  pollOptionPlaceholder: string;
+  pollCreateSubmit: string;
+  pollActiveBadge: string;
+  pollEndedBadge: string;
+  pollVoteAction: string;
+  pollVotedBadge: string;
+  pollEndAction: string;
+  askQuestionPlaceholder: string;
+  askQuestionSubmit: string;
+  upvote: string;
+  upvoted: string;
+  answered: string;
+  markAnswered: string;
+  simulatedAttendees: string;
+  localHardwarePreview: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -160,7 +184,31 @@ export const translations: Record<Language, Translations> = {
     sessionConcludedSubtitle: "This broadcast session has concluded. Replays will be made available shortly.",
     registrationClosedDraft: "This webinar is currently in Draft mode and is not yet open for public audience registration.",
     registrationClosedEnded: "Registration is closed because this live session has already concluded.",
-    footerRights: "All rights reserved. Option C Dual-Mode Architecture."
+    footerRights: "All rights reserved. Option C Dual-Mode Architecture.",
+    deviceSettingsTitle: "Audio & Video Devices",
+    deviceSettingsSubtitle: "Select input hardware and monitor audio levels.",
+    selectCamera: "Camera Device",
+    selectMicrophone: "Microphone Device",
+    startScreenShare: "Share Screen",
+    stopScreenShare: "Stop Sharing",
+    screenShareActive: "Screen Sharing Active",
+    createPollTitle: "Create Live Poll",
+    pollQuestionPlaceholder: "Ask a question to your audience...",
+    pollOptionPlaceholder: "Option",
+    pollCreateSubmit: "Launch Poll",
+    pollActiveBadge: "ACTIVE POLL",
+    pollEndedBadge: "CLOSED",
+    pollVoteAction: "Vote",
+    pollVotedBadge: "Voted",
+    pollEndAction: "End Poll",
+    askQuestionPlaceholder: "Type your question for the presenter...",
+    askQuestionSubmit: "Submit Question",
+    upvote: "Upvote",
+    upvoted: "Upvoted",
+    answered: "Answered",
+    markAnswered: "Mark Answered",
+    simulatedAttendees: "Simulated Attendees",
+    localHardwarePreview: "Local Hardware Loopback [DEMO]"
   },
   hi: {
     appName: "वेबिनारपल्स",
@@ -240,6 +288,30 @@ export const translations: Record<Language, Translations> = {
     sessionConcludedSubtitle: "यह प्रसारण सत्र समाप्त हो चुका है। रिकॉर्डिंग जल्द उपलब्ध कराई जाएगी।",
     registrationClosedDraft: "यह वेबिनार अभी ड्राफ्ट मोड में है और सार्वजनिक पंजीकरण के लिए नहीं खुला है।",
     registrationClosedEnded: "पंजीकरण बंद है क्योंकि यह लाइव सत्र पहले ही समाप्त हो चुका है।",
-    footerRights: "सर्वाधिकार सुरक्षित। विकल्प सी ड्यूल-मोड आर्किटेक्चर।"
+    footerRights: "सर्वाधिकार सुरक्षित। विकल्प सी ड्यूल-मोड आर्किटेक्चर।",
+    deviceSettingsTitle: "ऑडियो और वीडियो डिवाइस",
+    deviceSettingsSubtitle: "इनपुट हार्डवेयर चुनें और ऑडियो स्तर की निगरानी करें।",
+    selectCamera: "कैमरा डिवाइस",
+    selectMicrophone: "माइक्रोफोन डिवाइस",
+    startScreenShare: "स्क्रीन शेयर करें",
+    stopScreenShare: "शेयरिंग रोकें",
+    screenShareActive: "स्क्रीन शेयरिंग सक्रिय",
+    createPollTitle: "लाइव पोल बनाएं",
+    pollQuestionPlaceholder: "दर्शकों से एक प्रश्न पूछें...",
+    pollOptionPlaceholder: "विकल्प",
+    pollCreateSubmit: "पोल शुरू करें",
+    pollActiveBadge: "सक्रिय पोल",
+    pollEndedBadge: "समाप्त",
+    pollVoteAction: "वोट करें",
+    pollVotedBadge: "वोट दिया गया",
+    pollEndAction: "पोल समाप्त करें",
+    askQuestionPlaceholder: "प्रस्तोता के लिए अपना प्रश्न लिखें...",
+    askQuestionSubmit: "प्रश्न सबमिट करें",
+    upvote: "अपवोट",
+    upvoted: "अपवोट किया",
+    answered: "उत्तर दिया गया",
+    markAnswered: "उत्तर चिह्नित करें",
+    simulatedAttendees: "सिम्युलेटेड दर्शक",
+    localHardwarePreview: "लोकल हार्डवेयर लूपबैक [डेमो]"
   }
 };

@@ -14,3 +14,4 @@
 | :--- | :--- | :--- | :--- |
 | 2026-11-12 | Git credential & .env exclusion check | Critical | Configured comprehensive `.gitignore` |
 | 2026-11-12 | Architectural Secret Isolation Review | Critical | Defined strict server-side JWT generation policy for Phase 4; confirmed zero external credentials present or required for Phases 0-3. |
+| 2026-11-12 | Phase 3 Media Privacy & Zero-Leak Audit | High | Verified local camera and mic access requires explicit user interaction (no auto-start); verified all MediaStreamTracks are immediately terminated on component unmount; verified no media data, frames, audio, or credentials are saved to localStorage or sent to external endpoints. |

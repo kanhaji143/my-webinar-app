@@ -34,15 +34,15 @@
 - *Status*: Complete (verified via Playwright suite, 26/26 tests passing, strict lifecycle state store).
 
 ### Phase 3: Local Webinar Functionality (API-Free / DEMO)
-- [ ] Browser camera & microphone access preview using standard Web MediaStream API (`navigator.mediaDevices`).
-- [ ] Device selector controls (camera, microphone, speaker selection) with visual audio level indicator.
-- [ ] Local Screen Share preview on Host Stage.
-- [ ] Local [DEMO] Chat component (client-side state simulation).
-- [ ] Local [DEMO] Polls component (host creation, simulated voting, instant visual results).
-- [ ] Local [DEMO] Q&A component (submit questions, upvote, host answer state).
-- [ ] Automated Playwright tests verifying camera preview controls, chat interactions, and poll voting.
+- [x] Browser camera & microphone access preview using standard Web MediaStream API (`navigator.mediaDevices`).
+- [x] Device selector controls (camera, microphone, speaker selection) with visual audio level indicator.
+- [x] Local Screen Share preview on Host Stage.
+- [x] Local [DEMO] Chat component (client-side state simulation).
+- [x] Local [DEMO] Polls component (host creation, simulated voting, instant visual results).
+- [x] Local [DEMO] Q&A component (submit questions, upvote, host answer state).
+- [x] Automated Playwright tests verifying camera preview controls, chat interactions, and poll voting.
 - *Dependencies*: Phase 2 UI.
-- *Note*: Clearly labelled [DEMO] local state; no multi-device synchronization claimed without real backend.
+- *Status*: Complete (verified via Playwright suite, 40/40 tests passing across Phases 1, 2, and 3; API-Free native media and local stores).
 
 ### Phase 4: LiveKit Webinar Integration (Real Infrastructure)
 > *Gate: Requires explicit user approval and LiveKit credentials configuration.*
