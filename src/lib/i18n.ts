@@ -1,0 +1,176 @@
+export type Language = 'en' | 'hi';
+
+export interface Translations {
+  appName: string;
+  tagline: string;
+  webinarMode: string;
+  meetingMode: string;
+  dashboard: string;
+  createWebinar: string;
+  newMeeting: string;
+  joinRoom: string;
+  demoModeNotice: string;
+  demoBadge: string;
+  features: string;
+  pricing: string;
+  login: string;
+  getStarted: string;
+  explorePlatform: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  launchWebinar: string;
+  startMeeting: string;
+  allWebinars: string;
+  scheduledWebinars: string;
+  pastRecordings: string;
+  noWebinarsTitle: string;
+  noWebinarsDesc: string;
+  title: string;
+  description: string;
+  dateTime: string;
+  duration: string;
+  createSubmit: string;
+  hostRoomTitle: string;
+  viewerRoomTitle: string;
+  meetingRoomTitle: string;
+  mute: string;
+  unmute: string;
+  cameraOn: string;
+  cameraOff: string;
+  shareScreen: string;
+  leaveRoom: string;
+  endWebinar: string;
+  participants: string;
+  chat: string;
+  qa: string;
+  polls: string;
+  send: string;
+  registerNow: string;
+  joinAsViewer: string;
+  name: string;
+  email: string;
+  roleHost: string;
+  roleViewer: string;
+  roleParticipant: string;
+  statusLive: string;
+  statusUpcoming: string;
+  statusEnded: string;
+  footerRights: string;
+}
+
+export const translations: Record<Language, Translations> = {
+  en: {
+    appName: "WebinarPulse",
+    tagline: "Professional Webinars & High-Def Video Meetings",
+    webinarMode: "Webinars",
+    meetingMode: "Meetings",
+    dashboard: "Dashboard",
+    createWebinar: "Host Webinar",
+    newMeeting: "Quick Meeting",
+    joinRoom: "Join Session",
+    demoModeNotice: "DEMO MODE: Running fully local without external media servers or credentials.",
+    demoBadge: "DEMO",
+    features: "Features",
+    pricing: "Roadmap",
+    login: "Sign In",
+    getStarted: "Get Started Free",
+    explorePlatform: "Explore Dashboard",
+    heroTitle: "Broadcast to Thousands, Meet with Anyone.",
+    heroSubtitle: "An enterprise-grade hybrid live-streaming and interactive video meeting platform designed for seamless presentation delivery and high-touch team collaboration.",
+    launchWebinar: "Create a Webinar",
+    startMeeting: "Start Instant Meeting",
+    allWebinars: "All Webinars",
+    scheduledWebinars: "Upcoming Live Webinars",
+    pastRecordings: "Recorded Archives",
+    noWebinarsTitle: "No webinars scheduled yet",
+    noWebinarsDesc: "Get started by scheduling your first broadcast session.",
+    title: "Session Title",
+    description: "Session Overview & Agenda",
+    dateTime: "Date & Start Time",
+    duration: "Estimated Duration (Minutes)",
+    createSubmit: "Schedule Webinar Session",
+    hostRoomTitle: "Host Broadcast Studio",
+    viewerRoomTitle: "Live Webinar Stage",
+    meetingRoomTitle: "Interactive Team Conference",
+    mute: "Mute",
+    unmute: "Unmute",
+    cameraOn: "Camera On",
+    cameraOff: "Camera Off",
+    shareScreen: "Share Screen",
+    leaveRoom: "Leave Room",
+    endWebinar: "End Broadcast",
+    participants: "Participants",
+    chat: "Live Chat",
+    qa: "Q&A",
+    polls: "Polls",
+    send: "Send",
+    registerNow: "Register for Session",
+    joinAsViewer: "Enter Stage as Viewer",
+    name: "Full Name",
+    email: "Email Address",
+    roleHost: "Host",
+    roleViewer: "Viewer",
+    roleParticipant: "Participant",
+    statusLive: "LIVE",
+    statusUpcoming: "UPCOMING",
+    statusEnded: "ENDED",
+    footerRights: "All rights reserved. Option C Dual-Mode Architecture."
+  },
+  hi: {
+    appName: "वेबिनारपल्स",
+    tagline: "पेशेवर वेबिनार और उच्च गुणवत्ता वाली वीडियो बैठकें",
+    webinarMode: "वेबिनार",
+    meetingMode: "मीटिंग",
+    dashboard: "डैशबोर्ड",
+    createWebinar: "वेबिनार आयोजित करें",
+    newMeeting: "त्वरित मीटिंग",
+    joinRoom: "सत्र से जुड़ें",
+    demoModeNotice: "डेमो मोड: बिना किसी बाहरी मीडिया सर्वर या क्रेडेंशियल्स के स्थानीय रूप से चल रहा है।",
+    demoBadge: "डेमो",
+    features: "विशेषताएं",
+    pricing: "रोडमैप",
+    login: "साइन इन",
+    getStarted: "शुरू करें",
+    explorePlatform: "डैशबोर्ड देखें",
+    heroTitle: "हज़ारों लोगों तक प्रसारण करें, किसी से भी मिलें।",
+    heroSubtitle: "सुगम प्रस्तुति और सहज टीम सहयोग के लिए डिज़ाइन किया गया एक एंटरप्राइज-ग्रेड लाइव-स्ट्रीमिंग और इंटरैक्टिव वीडियो प्लेटफॉर्म।",
+    launchWebinar: "वेबिनार बनाएं",
+    startMeeting: "तुरंत मीटिंग शुरू करें",
+    allWebinars: "सभी वेबिनार",
+    scheduledWebinars: "आगामी लाइव वेबिनार",
+    pastRecordings: "रिकॉर्डेड आर्काइव",
+    noWebinarsTitle: "अभी कोई वेबिनार निर्धारित नहीं है",
+    noWebinarsDesc: "अपना पहला प्रसारण सत्र निर्धारित करके शुरुआत करें।",
+    title: "सत्र का शीर्षक",
+    description: "सत्र विवरण और एजेंडा",
+    dateTime: "दिनांक और समय",
+    duration: "अनुमानित अवधि (मिनट)",
+    createSubmit: "वेबिनार सत्र निर्धारित करें",
+    hostRoomTitle: "होस्ट ब्रॉडकास्ट स्टूडियो",
+    viewerRoomTitle: "लाइव वेबिनार स्टेज",
+    meetingRoomTitle: "इंटरैक्टिव टीम कॉन्फ्रेंस",
+    mute: "म्यूट करें",
+    unmute: "अनम्यूट करें",
+    cameraOn: "कैमरा चालू",
+    cameraOff: "कैमरा बंद",
+    shareScreen: "स्क्रीन शेयर",
+    leaveRoom: "रूम छोड़ें",
+    endWebinar: "प्रसारण समाप्त करें",
+    participants: "प्रतिभागी",
+    chat: "लाइव चैट",
+    qa: "प्रश्नोत्तरी (Q&A)",
+    polls: "पोल",
+    send: "भेजें",
+    registerNow: "सत्र के लिए पंजीकरण करें",
+    joinAsViewer: "दर्शक के रूप में प्रवेश करें",
+    name: "पूरा नाम",
+    email: "ईमेल पता",
+    roleHost: "होस्ट",
+    roleViewer: "दर्शक",
+    roleParticipant: "प्रतिभागी",
+    statusLive: "लाइव",
+    statusUpcoming: "आगामी",
+    statusEnded: "समाप्त",
+    footerRights: "सर्वाधिकार सुरक्षित। विकल्प सी ड्यूल-मोड आर्किटेक्चर।"
+  }
+};

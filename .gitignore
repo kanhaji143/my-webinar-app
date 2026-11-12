@@ -18,6 +18,10 @@ dist/
 build/
 .next/
 out/
+.vercel/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
 
 # Logs & Debug
 logs/
