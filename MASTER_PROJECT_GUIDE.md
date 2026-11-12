@@ -1,9 +1,62 @@
-# Live Webinar Platform - Master Project Guide
+# Live Webinar + Video Meeting SaaS Platform - Master Project Guide
 
 ## Overview
-This document serves as the master guide and single source of truth for the **Live Webinar Platform** project.
+This document serves as the master guide and single source of truth for the **Live Webinar + Video Meeting SaaS Platform** project.
 
-## Permanent Project Development Rules
+---
+
+## 1. Product Vision & Architecture
+
+The platform is an independent browser-based SaaS combining two operating modes:
+
+### Primary Mode: Professional Webinar Platform
+- **Roles:** Host and Viewer roles.
+- **Webinar Lifecycle:** Creation, scheduling, lifecycle state transitions.
+- **Registration:** Viewer registration and join flow.
+- **Stage & Controls:** Host media controls, screen sharing, broadcast stage.
+- **Engagement:** Real-time chat, moderated Q&A, and live polls.
+- **Management:** Audience management, attendance tracking, and engagement metrics.
+
+### Secondary Mode: Interactive Video Meeting Platform (Zoom-like)
+- **Multi-participant:** Simultaneous camera and microphone for attendees.
+- **Layouts:** Dynamic gallery view and active speaker view.
+- **Collaboration:** Screen sharing, meeting chat, raise hand, emoji reactions.
+- **Control:** Participant management (mute/remove), waiting room moderation.
+
+---
+
+## 2. Approved Technology Stack
+
+- **Framework:** Next.js (App Router)
+- **UI & Components:** React, Tailwind CSS, Lucide React
+- **Language:** TypeScript
+- **Backend / API:** Next.js Route Handlers (`app/api/*`)
+  > *Constraint: No separate Express or Fastify server unless a documented architectural reason emerges and is formally approved.*
+- **Real-Time Video / Audio / Data Engine:** LiveKit (LiveKit Server SDK, LiveKit React Components, LiveKit Client SDK)
+- **Testing & Browser Automation:** Playwright Test
+- **Version Control:** Git
+
+---
+
+## 3. Core Development Principles
+
+### API-Free-First Policy
+All UI layouts, flows, and interactive components are developed and verified before requiring external API credentials or third-party service connections:
+- Build complete UI surfaces: Homepage, Dashboard, Creation, Registration, Host Room, Viewer Room, Meeting Room.
+- Implement clearly labelled **DEMO** implementations for chat, polls, camera/mic browser preview, and participant management.
+- Do not claim local demo data is shared between different devices or sessions.
+- Prepare clean, modular interfaces for seamless transition to live backends.
+
+### Future LiveKit Integration Policy
+LiveKit real-time engine integration will occur strictly after API-free development is complete and explicitly approved:
+- Configure LiveKit credentials securely via server-side environment variables.
+- Generate secure server-side JWT tokens via Next.js Route Handlers.
+- Implement real-time media tracks, screen sharing, and data channels.
+- **Security Rule:** Never expose LiveKit API secrets to client-side/browser code.
+
+---
+
+## 4. Permanent Project Development Rules
 
 ### Development Philosophy
 - Work efficiently and avoid unnecessary repetitive steps.
