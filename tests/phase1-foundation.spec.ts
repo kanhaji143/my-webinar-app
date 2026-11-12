@@ -42,6 +42,7 @@ test.describe('Phase 1: Foundation, Routes & Design System', () => {
 
     // Fill valid form
     await page.getByTestId('input-title').fill('Playwright Automated Verification Session');
+    await page.getByTestId('input-host-name').fill('Dr. Vikram Malhotra');
     await page.getByTestId('input-description').fill('Validating Phase 1 E2E tests deterministically.');
     await page.getByTestId('btn-submit-webinar').click();
 

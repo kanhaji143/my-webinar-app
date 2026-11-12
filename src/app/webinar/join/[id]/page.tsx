@@ -12,11 +12,14 @@ import {
   AlertCircle,
   ShieldCheck,
   CheckCircle2,
+  Globe,
+  Lock,
 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Button } from '@/components/Button';
 import { Badge } from '@/components/Badge';
 import { Card } from '@/components/Card';
+import { useWebinarStore } from '@/lib/webinarStore';
 
 interface JoinPageProps {
   params: Promise<{ id: string }>;
@@ -26,11 +29,24 @@ function WebinarJoinContent({ params }: JoinPageProps) {
   const resolvedParams = use(params);
   const sessionId = resolvedParams.id;
   const { t } = useLanguage();
+  const { getWebinar, registerAttendee } = useWebinarStore();
+
+  const webinar = getWebinar(sessionId);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [registered, setRegistered] = useState(false);
+
+  // Fallback metadata if not in seed
+  const title = webinar?.title || sessionId.replace(/-/g, ' ').toUpperCase();
+  const hostName = webinar?.hostName || 'Dr. Vikram Malhotra';
+  const description = webinar?.description || 'Deep dive technical broadcast presentation.';
+  const date = webinar?.date || '2026-11-20';
+  const time = webinar?.time || '18:00';
+  const duration = webinar?.duration || 60;
+  const timezone = webinar?.timezone || 'IST (UTC+5:30)';
+  const status = webinar?.status || 'SCHEDULED';
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +65,12 @@ function WebinarJoinContent({ params }: JoinPageProps) {
       return;
     }
 
+    const res = registerAttendee(sessionId, { name, email });
+    if (!res.success) {
+      setErrors({ form: res.error || 'Failed to complete registration.' });
+      return;
+    }
+
     setErrors({});
     setRegistered(true);
   };
@@ -62,7 +84,7 @@ function WebinarJoinContent({ params }: JoinPageProps) {
             Live Webinar Registration
           </Badge>
           <Badge variant="warning" size="sm">
-            DEMO GATE
+            [DEMO GATE]
           </Badge>
         </div>
 
@@ -75,32 +97,106 @@ function WebinarJoinContent({ params }: JoinPageProps) {
       </div>
 
       <Card variant="webinar" className="p-6 sm:p-8">
-        {/* Session Snapshot */}
-        <div className="p-4 rounded-lg bg-slate-950/70 border border-indigo-950/60 mb-6 space-y-2">
+        {/* Session Snapshot Card */}
+        <div className="p-4 rounded-lg bg-slate-950/70 border border-indigo-950/60 mb-6 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-indigo-300">Target Session</span>
-            <Badge variant="success" size="sm">Active Stage</Badge>
-          </div>
-          <h2 className="text-base font-bold text-white">
-            {sessionId.replace(/-/g, ' ').toUpperCase()}
-          </h2>
-          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 pt-1">
-            <span className="flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-indigo-400" />
-              Scheduled Today
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-indigo-400" />
-              60 Minutes
-            </span>
-            <span className="flex items-center gap-1.5">
+            <Badge
+              variant={
+                status === 'LIVE'
+                  ? 'destructive'
+                  : status === 'SCHEDULED'
+                  ? 'primary'
+                  : status === 'DRAFT'
+                  ? 'outline'
+                  : 'default'
+              }
+              size="sm"
+              className={status === 'LIVE' ? 'animate-pulse' : ''}
+              data-testid="join-session-status-badge"
+            >
+              {status === 'LIVE'
+                ? `● ${t.statusLive}`
+                : status === 'SCHEDULED'
+                ? t.statusScheduled
+                : status === 'DRAFT'
+                ? t.statusDraft
+                : t.statusEnded}
+            </Badge>
+
+            <span className="text-xs text-slate-400 flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              Free Access
+              Free Registration [Demo]
             </span>
+          </div>
+
+          <h2 className="text-lg font-bold text-white" data-testid="join-webinar-title">
+            {title}
+          </h2>
+
+          <p className="text-xs text-slate-300 leading-relaxed">
+            {description}
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-400 pt-2 border-t border-slate-900">
+            <div className="flex items-center gap-2">
+              <User className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <span>Host: <strong className="text-slate-200">{hostName}</strong></span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <span>{date}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <span>{time} ({duration} mins)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Globe className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <span>{timezone}</span>
+            </div>
           </div>
         </div>
 
-        {registered ? (
+        {/* Status Guard Logic */}
+        {status === 'DRAFT' ? (
+          <div className="text-center py-6 space-y-4" data-testid="draft-mode-notice">
+            <div className="w-12 h-12 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 mx-auto">
+              <Lock className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-white">Draft Mode Active</h3>
+              <p className="mt-1 text-xs text-slate-400 max-w-sm mx-auto">
+                {t.registrationClosedDraft}
+              </p>
+            </div>
+            <div className="pt-2">
+              <Link href="/dashboard">
+                <Button variant="outline" size="sm">
+                  Return to Dashboard
+                </Button>
+              </Link>
+            </div>
+          </div>
+        ) : status === 'ENDED' ? (
+          <div className="text-center py-6 space-y-4" data-testid="ended-mode-notice">
+            <div className="w-12 h-12 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 mx-auto">
+              <AlertCircle className="w-6 h-6 text-slate-400" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-white">{t.sessionConcluded}</h3>
+              <p className="mt-1 text-xs text-slate-400 max-w-sm mx-auto">
+                {t.registrationClosedEnded}
+              </p>
+            </div>
+            <div className="pt-2">
+              <Link href="/dashboard">
+                <Button variant="outline" size="sm">
+                  Return to Dashboard
+                </Button>
+              </Link>
+            </div>
+          </div>
+        ) : registered ? (
           /* Confirmation & Enter Stage */
           <div className="text-center space-y-6 py-4" data-testid="registration-confirmed">
             <div className="w-12 h-12 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto">
@@ -124,6 +220,13 @@ function WebinarJoinContent({ params }: JoinPageProps) {
         ) : (
           /* Form */
           <form onSubmit={handleRegister} className="space-y-5" data-testid="form-webinar-join">
+            {errors.form && (
+              <div className="p-3 rounded-lg bg-rose-950/50 border border-rose-800 text-rose-300 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                <span>{errors.form}</span>
+              </div>
+            )}
+
             <div>
               <label htmlFor="name" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
                 {t.name} <span className="text-rose-400">*</span>

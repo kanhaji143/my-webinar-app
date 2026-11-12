@@ -25,13 +25,13 @@
 - *Dependencies*: Phase 0 completion.
 
 ### Phase 2: Webinar Management and Room UI
-- [ ] Webinar creation flow with Title, Description, Scheduled Time, and Host details.
-- [ ] Generate distinct Host Room URLs and Viewer Join URLs.
-- [ ] Viewer registration page (`/join/[webinarId]`).
-- [ ] Professional Host Room UI layout (Stage preview, host control bar, attendee panel, side panels).
-- [ ] Clean Viewer Room UI layout (Broadcast viewer window, reaction bar, engagement side panels).
+- [x] Webinar creation flow with Title, Description, Scheduled Time, and Host details.
+- [x] Generate distinct Host Room URLs and Viewer Join URLs.
+- [x] Viewer registration page (`/join/[webinarId]`).
+- [x] Professional Host Room UI layout (Stage preview, host control bar, attendee panel, side panels).
+- [x] Clean Viewer Room UI layout (Broadcast viewer window, reaction bar, engagement side panels).
 - *Dependencies*: Phase 1 design system.
-- *Status*: UI-only / [DEMO] state transitions.
+- *Status*: Complete (verified via Playwright suite, 26/26 tests passing, strict lifecycle state store).
 
 ### Phase 3: Local Webinar Functionality (API-Free / DEMO)
 - [ ] Browser camera & microphone access preview using standard Web MediaStream API (`navigator.mediaDevices`).

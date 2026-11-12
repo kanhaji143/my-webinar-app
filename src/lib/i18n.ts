@@ -27,8 +27,17 @@ export interface Translations {
   noWebinarsDesc: string;
   title: string;
   description: string;
+  hostName: string;
+  hostNamePlaceholder: string;
   dateTime: string;
   duration: string;
+  timezone: string;
+  settingsHeading: string;
+  recordSessionLabel: string;
+  muteOnEntryLabel: string;
+  allowQaLabel: string;
+  saveDraft: string;
+  scheduleWebinar: string;
   createSubmit: string;
   hostRoomTitle: string;
   viewerRoomTitle: string;
@@ -40,6 +49,9 @@ export interface Translations {
   shareScreen: string;
   leaveRoom: string;
   endWebinar: string;
+  startBroadcast: string;
+  endBroadcast: string;
+  publishDraft: string;
   participants: string;
   chat: string;
   qa: string;
@@ -55,6 +67,17 @@ export interface Translations {
   statusLive: string;
   statusUpcoming: string;
   statusEnded: string;
+  statusDraft: string;
+  statusScheduled: string;
+  filterAll: string;
+  searchPlaceholder: string;
+  waitingForHost: string;
+  waitingForHostSubtitle: string;
+  stageActive: string;
+  sessionConcluded: string;
+  sessionConcludedSubtitle: string;
+  registrationClosedDraft: string;
+  registrationClosedEnded: string;
   footerRights: string;
 }
 
@@ -82,12 +105,21 @@ export const translations: Record<Language, Translations> = {
     allWebinars: "All Webinars",
     scheduledWebinars: "Upcoming Live Webinars",
     pastRecordings: "Recorded Archives",
-    noWebinarsTitle: "No webinars scheduled yet",
-    noWebinarsDesc: "Get started by scheduling your first broadcast session.",
+    noWebinarsTitle: "No webinars found",
+    noWebinarsDesc: "No webinars match the selected filter criteria or search query.",
     title: "Session Title",
     description: "Session Overview & Agenda",
+    hostName: "Host / Presenter Name",
+    hostNamePlaceholder: "e.g., Dr. Vikram Malhotra",
     dateTime: "Date & Start Time",
     duration: "Estimated Duration (Minutes)",
+    timezone: "Broadcast Timezone",
+    settingsHeading: "Webinar Preferences",
+    recordSessionLabel: "Enable Cloud Recording (Demo)",
+    muteOnEntryLabel: "Mute audience upon entry",
+    allowQaLabel: "Enable Moderated Audience Q&A",
+    saveDraft: "Save as Draft",
+    scheduleWebinar: "Schedule Webinar",
     createSubmit: "Schedule Webinar Session",
     hostRoomTitle: "Host Broadcast Studio",
     viewerRoomTitle: "Live Webinar Stage",
@@ -99,6 +131,9 @@ export const translations: Record<Language, Translations> = {
     shareScreen: "Share Screen",
     leaveRoom: "Leave Room",
     endWebinar: "End Broadcast",
+    startBroadcast: "Go Live (Start Broadcast)",
+    endBroadcast: "End Broadcast Session",
+    publishDraft: "Publish & Schedule",
     participants: "Participants",
     chat: "Live Chat",
     qa: "Q&A",
@@ -114,6 +149,17 @@ export const translations: Record<Language, Translations> = {
     statusLive: "LIVE",
     statusUpcoming: "UPCOMING",
     statusEnded: "ENDED",
+    statusDraft: "DRAFT",
+    statusScheduled: "SCHEDULED",
+    filterAll: "All",
+    searchPlaceholder: "Search webinars by title or presenter...",
+    waitingForHost: "Webinar Stage Standby",
+    waitingForHostSubtitle: "The host has not started broadcasting yet. The live stream will appear here when the event begins.",
+    stageActive: "Live Broadcast Active",
+    sessionConcluded: "Webinar Has Ended",
+    sessionConcludedSubtitle: "This broadcast session has concluded. Replays will be made available shortly.",
+    registrationClosedDraft: "This webinar is currently in Draft mode and is not yet open for public audience registration.",
+    registrationClosedEnded: "Registration is closed because this live session has already concluded.",
     footerRights: "All rights reserved. Option C Dual-Mode Architecture."
   },
   hi: {
@@ -139,12 +185,21 @@ export const translations: Record<Language, Translations> = {
     allWebinars: "सभी वेबिनार",
     scheduledWebinars: "आगामी लाइव वेबिनार",
     pastRecordings: "रिकॉर्डेड आर्काइव",
-    noWebinarsTitle: "अभी कोई वेबिनार निर्धारित नहीं है",
-    noWebinarsDesc: "अपना पहला प्रसारण सत्र निर्धारित करके शुरुआत करें।",
+    noWebinarsTitle: "कोई वेबिनार नहीं मिला",
+    noWebinarsDesc: "चयनित फ़िल्टर या खोज क्वेरी से मेल खाने वाला कोई वेबिनार नहीं मिला।",
     title: "सत्र का शीर्षक",
     description: "सत्र विवरण और एजेंडा",
+    hostName: "होस्ट / प्रस्तोता का नाम",
+    hostNamePlaceholder: "उदा., डॉ. विक्रम मल्होत्रा",
     dateTime: "दिनांक और समय",
     duration: "अनुमानित अवधि (मिनट)",
+    timezone: "प्रसारण समय क्षेत्र",
+    settingsHeading: "वेबिनार सेटिंग्स",
+    recordSessionLabel: "क्लाउड रिकॉर्डिंग सक्षम करें (डेमो)",
+    muteOnEntryLabel: "प्रवेश पर दर्शकों को म्यूट करें",
+    allowQaLabel: "प्रश्नोत्तरी (Q&A) सक्षम करें",
+    saveDraft: "ड्राफ्ट के रूप में सहेजें",
+    scheduleWebinar: "वेबिनार शेड्यूल करें",
     createSubmit: "वेबिनार सत्र निर्धारित करें",
     hostRoomTitle: "होस्ट ब्रॉडकास्ट स्टूडियो",
     viewerRoomTitle: "लाइव वेबिनार स्टेज",
@@ -156,6 +211,9 @@ export const translations: Record<Language, Translations> = {
     shareScreen: "स्क्रीन शेयर",
     leaveRoom: "रूम छोड़ें",
     endWebinar: "प्रसारण समाप्त करें",
+    startBroadcast: "लाइव जाएं (प्रसारण शुरू करें)",
+    endBroadcast: "प्रसारण सत्र समाप्त करें",
+    publishDraft: "प्रकाशित और शेड्यूल करें",
     participants: "प्रतिभागी",
     chat: "लाइव चैट",
     qa: "प्रश्नोत्तरी (Q&A)",
@@ -171,6 +229,17 @@ export const translations: Record<Language, Translations> = {
     statusLive: "लाइव",
     statusUpcoming: "आगामी",
     statusEnded: "समाप्त",
+    statusDraft: "ड्राफ्ट",
+    statusScheduled: "शेड्यूल्ड",
+    filterAll: "सभी",
+    searchPlaceholder: "शीर्षक या प्रस्तोता द्वारा वेबिनार खोजें...",
+    waitingForHost: "वेबिनार स्टेज स्टैंडबाय",
+    waitingForHostSubtitle: "होस्ट ने अभी प्रसारण शुरू नहीं किया है। लाइव स्ट्रीम कार्यक्रम शुरू होने पर यहाँ दिखाई देगी।",
+    stageActive: "लाइव प्रसारण सक्रिय",
+    sessionConcluded: "वेबिनार समाप्त हो गया है",
+    sessionConcludedSubtitle: "यह प्रसारण सत्र समाप्त हो चुका है। रिकॉर्डिंग जल्द उपलब्ध कराई जाएगी।",
+    registrationClosedDraft: "यह वेबिनार अभी ड्राफ्ट मोड में है और सार्वजनिक पंजीकरण के लिए नहीं खुला है।",
+    registrationClosedEnded: "पंजीकरण बंद है क्योंकि यह लाइव सत्र पहले ही समाप्त हो चुका है।",
     footerRights: "सर्वाधिकार सुरक्षित। विकल्प सी ड्यूल-मोड आर्किटेक्चर।"
   }
 };

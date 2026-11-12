@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 ### Added
+- **Phase 2: Webinar Management & Room UI**:
+  - Centralized client-side state store (`src/lib/webinarStore.ts`) implementing robust reactive subscriptions via `useSyncExternalStore` and localStorage persistence.
+  - Full webinar lifecycle state machine enforcing strict transitions: `DRAFT` → `SCHEDULED` → `LIVE` → `ENDED`, with protection against invalid transitions (e.g. DRAFT directly to LIVE, or transitioning ENDED sessions).
+  - Enhanced Webinar Creation Studio (`/webinar/new`): Added Host Name, Duration, Timezone, and advanced settings (auto-record, mute-on-entry, Q&A toggle) with dual actions: "Save as Draft" and "Schedule Webinar".
+  - Upgraded Platform Dashboard (`/dashboard`): Implemented instant search, status filter pills (`ALL`, `SCHEDULED`, `LIVE`, `DRAFT`, `ENDED`), direct lifecycle action buttons (Publish Draft, Go Live Now, End Broadcast), and attendee count indicators.
+  - Dynamic Webinar Registration Gate (`/webinar/join/[id]`): Displays schedule, host profile, timezone, and live status. Enforces lifecycle business rules: blocks registration for `DRAFT` and `ENDED` sessions with clear guidance, and seamlessly accepts attendee registrations for `SCHEDULED` and `LIVE` webinars.
+  - Broadcast Host Studio (`/webinar/host/[id]`): Features live status telemetry, dynamic participant counter linked to store registrations, real-time lifecycle controls ("Go Live [DEMO]", "End Broadcast"), presenter media preview, and sidebar tabs for simulated Chat, Attendee Roster, Q&A, Polls, and Recording controls.
+  - Viewer Auditorium (`/webinar/viewer/[id]`): Dynamic stage displaying standby notice for `SCHEDULED` sessions, active receiver for `LIVE` broadcasts, and concluded notice for `ENDED` webinars.
+  - Full bilingual expansion in `src/lib/i18n.ts` covering all Phase 2 lifecycle states, dashboard filter pills, creation options, and studio/viewer notices in English (`EN`) and Hindi (`हिंदी`).
+  - Comprehensive Playwright test suite (`tests/phase2-webinar-management.spec.ts`) with 12 end-to-end tests covering validation, draft vs scheduled creation, dashboard search and filtering, registration status gates, host lifecycle transitions, viewer stage responsiveness, language switching, and 5 viewport tiers (320px, 375px, 768px, 1024px, 1440px). All 26 suite tests (14 Phase 1 + 12 Phase 2) pass cleanly.
 - **Phase 1: Project Scaffolding & Design System Foundation**:
   - Initialized Next.js 16 (App Router), React 19, TypeScript strict, and Tailwind CSS 4 foundation.
   - Installed `lucide-react` icon system and `@playwright/test` verification framework.
