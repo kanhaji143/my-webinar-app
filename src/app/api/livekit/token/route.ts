@@ -51,10 +51,12 @@ export async function POST(req: NextRequest) {
     // Grant permissions based on role.
     at.addGrant({
       room: room,
-      // Host can publish and subscribe; viewer can only subscribe.
+      // Host can publish media (video/audio); viewer cannot.
       canPublish: role === 'host',
+      // Both host and viewer need data publishing permissions for chat, polls, and Q&A.
+      canPublishData: true,
       canSubscribe: true,
-      // Optional: enable room join (required for both).
+      // Enable room join (required for both).
       roomJoin: true,
     });
 

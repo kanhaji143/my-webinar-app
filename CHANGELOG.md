@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 ### Added
+- **Phase 5: Real-Time Chat, Polls & Q&A Protocol & Permissions**:
+  - Implemented real-time interaction wire protocol (`src/lib/realtimeProtocol.ts`) with typed schemas for Chat, Polls, and Q&A over LiveKit Reliable Data Channels (`TOPIC_INTERACTION = 'webinar-interaction'`).
+  - Added multi-tab demo synchronization hook (`src/hooks/useRealtimeWebinar.ts`) utilizing `BroadcastChannel` when running without LiveKit Cloud.
+  - Implemented client-side security guards (`validateRealtimeMessage`) preventing viewers from issuing host-authoritative actions (`POLL_CREATE`, `POLL_CLOSE`, `POLL_UPDATE`, `QA_ANSWER`, `QA_DELETE`, `STATE_SNAPSHOT`).
+  - Added Q&A moderation control in Host Studio allowing hosts to remove inappropriate questions.
+  - Added duplicate vote prevention in Viewer Room with visual indicator (`[VOTED]`).
+  - Late joiner state snapshot request/response flow catching up viewers to currently active polls and questions.
+  - Full Playwright test coverage (`tests/phase5-realtime.spec.ts`) passing 46/48 total tests (with 2 expected credential-blocked tests).
+- **Phase 4: LiveKit Webinar Integration Foundation**:
+  - Integrated official `livekit-client` and `livekit-server-sdk` dependencies with strict cost guards.
+  - Added token route handler (`src/app/api/livekit/token/route.ts`) enforcing `LIVEKIT_ENABLED` flag and server-only credential isolation.
+  - Built usage tracking utilities (`src/lib/livekitUsage.ts`) with 5,000 participant-minute free tier cap and 70%, 85%, and 95% warning tiers.
+  - Added `LiveKitUsageBanner.tsx` and Host Studio LiveKit integration.
 - **Phase 3: Local Webinar Functionality (API-Free / DEMO)**:
   - Browser-native camera and microphone hook (`src/hooks/useLocalMedia.ts`) utilizing standard Web MediaStream API (`navigator.mediaDevices.getUserMedia()`).
   - Safe media control lifecycle: camera toggling, mic muting, dynamic track additions/removals, Web Audio API analyser audio-level detection, and mandatory component unmount cleanup (`track.stop()`) preventing memory or device leaks.

@@ -33,7 +33,7 @@ import LiveKitUsageBanner from '@/components/LiveKitUsageBanner';
 
 import { useWebinarStore, WebinarStatus } from '@/lib/webinarStore';
 import { useLocalMedia } from '@/hooks/useLocalMedia';
-import { useInteractiveStore } from '@/lib/interactiveStore';
+import { useRealtimeWebinar } from '@/hooks/useRealtimeWebinar';
 
 interface HostPageProps {
   params: Promise<{ id: string }>;
@@ -69,17 +69,22 @@ function WebinarHostContent({ params }: HostPageProps) {
     switchAudioDevice,
   } = useLocalMedia();
 
-  // Interactive store hook (local chat, polls, Q&A, participants)
+  // Interactive & Real-time synchronization hook (Chat, Polls, Q&A)
   const {
     messages,
     polls,
     questions,
     simulatedParticipants,
-    addChatMessage,
-    createPoll,
-    endPoll,
-    answerQuestion,
-  } = useInteractiveStore(sessionId);
+    broadcastChat,
+    broadcastPollCreate,
+    broadcastPollClose,
+    broadcastAnswerQuestion,
+    broadcastDeleteQuestion,
+  } = useRealtimeWebinar({
+    webinarId: sessionId,
+    userId: 'host-user-id',
+    role: 'host',
+  });
 
   const [activeSideTab, setActiveSideTab] = useState<'chat' | 'participants' | 'polls' | 'qa' | 'recording'>('chat');
   const [transitionError, setTransitionError] = useState<string | null>(null);
@@ -166,7 +171,7 @@ function WebinarHostContent({ params }: HostPageProps) {
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
-    addChatMessage(hostName, 'host', chatInput.trim());
+    broadcastChat(hostName, 'host', chatInput.trim());
     setChatInput('');
   };
 
@@ -182,7 +187,7 @@ function WebinarHostContent({ params }: HostPageProps) {
       return;
     }
 
-    createPoll(pollQuestion, [pollOpt1, pollOpt2]);
+    broadcastPollCreate(pollQuestion, [pollOpt1, pollOpt2]);
     setPollQuestion('');
     setPollOpt1('');
     setPollOpt2('');
@@ -191,7 +196,7 @@ function WebinarHostContent({ params }: HostPageProps) {
 
   const handleAnswerSubmit = (qId: string) => {
     if (!answerInputText.trim()) return;
-    answerQuestion(qId, answerInputText);
+    broadcastAnswerQuestion(qId, answerInputText);
     setAnsweringQId(null);
     setAnswerInputText('');
   };
@@ -817,7 +822,7 @@ function WebinarHostContent({ params }: HostPageProps) {
                       {poll.isActive && (
                         <button
                           type="button"
-                          onClick={() => endPoll(poll.id)}
+                          onClick={() => broadcastPollClose(poll.id)}
                           className="text-rose-400 hover:text-rose-300 font-semibold"
                           data-testid="btn-end-poll"
                         >
@@ -907,6 +912,15 @@ function WebinarHostContent({ params }: HostPageProps) {
                             <span>{t.markAnswered}</span>
                           </button>
                         )}
+                        <button
+                          type="button"
+                          onClick={() => broadcastDeleteQuestion(q.id)}
+                          className="text-rose-400 hover:text-rose-300 font-semibold text-[11px] ml-auto"
+                          data-testid={`btn-delete-qa-${q.id}`}
+                          title="Moderate/Remove Question"
+                        >
+                          Remove
+                        </button>
                       </div>
                     )}
                   </div>

@@ -375,6 +375,36 @@ export function answerQuestion(webinarId: string, questionId: string, answerText
   return true;
 }
 
+export function deleteQuestion(webinarId: string, questionId: string): boolean {
+  const current = getInteractiveSnapshot();
+  const nextQuestions = current.questions.filter((q) => !(q.id === questionId && q.webinarId === webinarId));
+
+  saveStore({
+    ...current,
+    questions: nextQuestions,
+  });
+
+  return true;
+}
+
+export function setPollSnapshot(webinarId: string, polls: Poll[]) {
+  const current = getInteractiveSnapshot();
+  const otherPolls = current.polls.filter((p) => p.webinarId !== webinarId);
+  saveStore({
+    ...current,
+    polls: [...otherPolls, ...polls],
+  });
+}
+
+export function setQASnapshot(webinarId: string, questions: QAQuestion[]) {
+  const current = getInteractiveSnapshot();
+  const otherQuestions = current.questions.filter((q) => q.webinarId !== webinarId);
+  saveStore({
+    ...current,
+    questions: [...otherQuestions, ...questions],
+  });
+}
+
 // Custom React hook
 export function useInteractiveStore(webinarId: string) {
   const data = useSyncExternalStore(subscribeInteractiveStore, getInteractiveSnapshot, () => memoryStore);
@@ -399,5 +429,8 @@ export function useInteractiveStore(webinarId: string) {
     askQuestion: (author: string, q: string) => askQuestion(webinarId, author, q),
     upvoteQuestion: (qId: string) => upvoteQuestion(webinarId, qId),
     answerQuestion: (qId: string, text: string) => answerQuestion(webinarId, qId, text),
+    deleteQuestion: (qId: string) => deleteQuestion(webinarId, qId),
+    setPollSnapshot: (polls: Poll[]) => setPollSnapshot(webinarId, polls),
+    setQASnapshot: (questions: QAQuestion[]) => setQASnapshot(webinarId, questions),
   };
 }

@@ -22,7 +22,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Badge } from '@/components/Badge';
 import { Button } from '@/components/Button';
 import { useWebinarStore, WebinarStatus } from '@/lib/webinarStore';
-import { useInteractiveStore } from '@/lib/interactiveStore';
+import { useRealtimeWebinar } from '@/hooks/useRealtimeWebinar';
 
 interface ViewerPageProps {
   params: Promise<{ id: string }>;
@@ -36,17 +36,21 @@ function WebinarViewerContent({ params }: ViewerPageProps) {
 
   const webinar = getWebinar(sessionId);
 
-  // Connect to interactive store for shared local chat, polls, Q&A
+  // Connect to realtime interaction hook (syncing Chat, Polls, Q&A across participants)
   const {
     messages,
     polls,
     questions,
     simulatedParticipants,
-    addChatMessage,
-    voteInPoll,
-    askQuestion,
-    upvoteQuestion,
-  } = useInteractiveStore(sessionId);
+    broadcastChat,
+    broadcastPollVote,
+    broadcastAskQuestion,
+    broadcastUpvoteQuestion,
+  } = useRealtimeWebinar({
+    webinarId: sessionId,
+    userId: 'viewer-client-id',
+    role: 'viewer',
+  });
 
   const [isMuted, setIsMuted] = useState(false);
   const [handRaised, setHandRaised] = useState(false);
@@ -66,14 +70,14 @@ function WebinarViewerContent({ params }: ViewerPageProps) {
   const handleSendChat = (e: React.FormEvent) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
-    addChatMessage('You (Viewer)', 'viewer', chatInput.trim());
+    broadcastChat('You (Viewer)', 'viewer', chatInput.trim());
     setChatInput('');
   };
 
   const handleSendQa = (e: React.FormEvent) => {
     e.preventDefault();
     if (!qaInput.trim()) return;
-    askQuestion('Viewer', qaInput.trim());
+    broadcastAskQuestion('Viewer', qaInput.trim());
     setQaInput('');
   };
 
@@ -369,7 +373,7 @@ function WebinarViewerContent({ params }: ViewerPageProps) {
                                 {poll.isActive && !poll.userVotedOptionId && (
                                   <button
                                     type="button"
-                                    onClick={() => voteInPoll(poll.id, opt.id)}
+                                    onClick={() => broadcastPollVote(poll.id, opt.id)}
                                     className="px-2 py-0.5 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-semibold"
                                     data-testid={`btn-vote-opt-${opt.id}`}
                                   >
@@ -423,7 +427,7 @@ function WebinarViewerContent({ params }: ViewerPageProps) {
                         </div>
                         <button
                           type="button"
-                          onClick={() => upvoteQuestion(q.id)}
+                          onClick={() => broadcastUpvoteQuestion(q.id)}
                           className={`px-2 py-1 rounded text-xs flex items-center gap-1 transition-all ${
                             q.userHasUpvoted
                               ? 'bg-indigo-600 text-white font-bold'
