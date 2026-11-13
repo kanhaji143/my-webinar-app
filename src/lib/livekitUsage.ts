@@ -13,13 +13,15 @@ export function estimateMonthlyUsage(
 }
 
 /**
- * Free‑tier monthly participant‑minute allowance (as documented by LiveKit).
- * Update this constant if LiveKit changes its free‑tier limits.
+ * Free‑tier monthly participant‑minute allowance.
+ * Official LiveKit Cloud quotas & limits reference:
+ * https://docs.livekit.io/deploy/admin/quotas-and-limits/
  */
-export const LIVEKIT_FREE_MONTHLY_MINUTES = 15000; // placeholder – verify against docs
+export const LIVEKIT_FREE_MONTHLY_MINUTES = 5000;
 
 /**
  * Determine which warning level (if any) should be shown based on the estimated usage.
+ * Warning thresholds are set at 70%, 85%, and 95% of the free allowance.
  * Returns one of: 'none', 'warning70', 'warning85', 'warning95'.
  */
 export function usageWarningLevel(estimatedMinutes: number):

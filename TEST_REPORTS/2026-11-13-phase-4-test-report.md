@@ -29,7 +29,7 @@ All development, verification, security isolation, and regression suites passed 
 | `phase1-foundation.spec.ts` | 14 | 14 | 0 | 0 | All 7 routes, viewport overflows (320px–1440px), language switcher |
 | `phase2-webinar-management.spec.ts` | 12 | 12 | 0 | 0 | Lifecycle (Draft, Scheduled, Live, Ended), form validation, search |
 | `phase3-local-functionality.spec.ts` | 14 | 14 | 0 | 0 | Native loopback video, audio level monitor, screen share, polls, chat |
-| `phase4-livekit.spec.ts` | 3 | 2 | 0 | 1 | Utility calculations, API route env security guard, blocked real cloud test |
+| `phase4-livekit.spec.ts` | 3 | 2 | 0 | 1 | Utility calculations & warning tiers, API route env guard, blocked cloud test |
 | **Total** | **43** | **42** | **0** | **1** | **100% of runnable tests passed** |
 
 ---
@@ -42,9 +42,14 @@ All development, verification, security isolation, and regression suites passed 
 2. **Feature-Flag Environment Guard:**
    - When `LIVEKIT_ENABLED` is missing or not `'true'`, the API endpoint rejects requests with HTTP 403.
    - The UI displays the native demo broadcast without attempting unauthorized network calls.
-3. **Participant-Minute Cost Guard:**
-   - Free-tier ceiling set to `15,000` monthly participant-minutes.
-   - Progressive warning indicators trigger at `70%`, `85%`, and `95%` usage thresholds.
+3. **Participant-Minute Cost Guard (Official LiveKit Quotas Alignment):**
+   - Free-tier ceiling set to `5,000` monthly participant-minutes per official LiveKit documentation:
+     `https://docs.livekit.io/deploy/admin/quotas-and-limits/`
+   - Progressive warning indicators trigger at:
+     - `3,500` minutes (70% threshold: `warning70`)
+     - `4,250` minutes (85% threshold: `warning85`)
+     - `4,750` minutes (95% threshold: `warning95`)
+     - `5,000` minutes (100% cap: `warning95`)
 4. **Billing & Deployment Guard:**
    - No automated cloud upgrades, no payment details entered, no deployment initiated, no git push to remote.
 

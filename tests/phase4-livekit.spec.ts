@@ -4,25 +4,32 @@ import { estimateMonthlyUsage, usageWarningLevel, LIVEKIT_FREE_MONTHLY_MINUTES }
 test.describe('Phase 4: LiveKit Webinar Integration Foundation', () => {
 
   test('1. livekitUsage utility correctly calculates monthly participant-minutes and warning tiers', async () => {
+    // Verify monthly estimation formula: participants * minutes * sessions
     // 10 participants, 20 mins, 4 sessions = 800 minutes
     const usage = estimateMonthlyUsage(10, 20, 4);
     expect(usage).toBe(800);
 
-    // Free tier constant verification (configured to 15,000 participant-minutes)
-    expect(LIVEKIT_FREE_MONTHLY_MINUTES).toBe(15000);
+    // Free tier constant verification (configured to 5,000 participant-minutes)
+    expect(LIVEKIT_FREE_MONTHLY_MINUTES).toBe(5000);
 
-    // Warning tier thresholds:
-    // None (<70%) -> < 10500 min
-    expect(usageWarningLevel(10499)).toBe('none');
-    // warning70 (70% <= x < 85%) -> 10500 to 12749 min
-    expect(usageWarningLevel(10500)).toBe('warning70');
-    expect(usageWarningLevel(12749)).toBe('warning70');
-    // warning85 (85% <= x < 95%) -> 12750 to 14249 min
-    expect(usageWarningLevel(12750)).toBe('warning85');
-    expect(usageWarningLevel(14249)).toBe('warning85');
-    // warning95 (>= 95%) -> >= 14250 min
-    expect(usageWarningLevel(14250)).toBe('warning95');
-    expect(usageWarningLevel(18000)).toBe('warning95');
+    // Warning tier thresholds for 5,000 allowance (70% = 3500, 85% = 4250, 95% = 4750):
+    // Below 70% (< 3500 min) -> 'none'
+    expect(usageWarningLevel(3499)).toBe('none');
+
+    // 3500 minutes -> warning70 (70% <= x < 85%)
+    expect(usageWarningLevel(3500)).toBe('warning70');
+    expect(usageWarningLevel(4249)).toBe('warning70');
+
+    // 4250 minutes -> warning85 (85% <= x < 95%)
+    expect(usageWarningLevel(4250)).toBe('warning85');
+    expect(usageWarningLevel(4749)).toBe('warning85');
+
+    // 4750 minutes -> warning95 (>= 95%)
+    expect(usageWarningLevel(4750)).toBe('warning95');
+
+    // 5000 minutes (100% / at cap) -> warning95
+    expect(usageWarningLevel(5000)).toBe('warning95');
+    expect(usageWarningLevel(6000)).toBe('warning95');
   });
 
   test('2. LiveKit token API route returns 403 or error when LiveKit is disabled / unconfigured', async ({ request }) => {
