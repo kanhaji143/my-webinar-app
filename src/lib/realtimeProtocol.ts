@@ -122,22 +122,43 @@ export type RealtimeMessage =
 
 /**
  * Validates whether an incoming message payload matches the protocol format and permissions.
+ * Optionally verifies against the actual verified transport participant ID and designated host ID.
  */
-export function validateRealtimeMessage(raw: unknown): RealtimeMessage | null {
+export function validateRealtimeMessage(
+  raw: unknown,
+  verifiedParticipantId?: string,
+  verifiedHostId?: string
+): RealtimeMessage | null {
   if (!raw || typeof raw !== 'object') return null;
   const msg = raw as Record<string, unknown>;
 
   if (msg.version !== PROTOCOL_VERSION) return null;
-  if (typeof msg.webinarId !== 'string' || !msg.webinarId) return null;
-  if (typeof msg.senderId !== 'string' || !msg.senderId) return null;
+  if (typeof msg.webinarId !== 'string' || !msg.webinarId || msg.webinarId.length > 128) return null;
+  if (typeof msg.senderId !== 'string' || !msg.senderId || msg.senderId.length > 128) return null;
   if (msg.senderRole !== 'host' && msg.senderRole !== 'viewer') return null;
   if (typeof msg.type !== 'string' || !msg.payload || typeof msg.payload !== 'object') return null;
 
+  // Transport Identity Verification:
+  // If verifiedParticipantId is provided (from LiveKit RemoteParticipant), senderId in payload must match
+  if (verifiedParticipantId && msg.senderId !== verifiedParticipantId) {
+    console.warn(`[Security Guard] Identity mismatch: payload senderId '${msg.senderId}' does not match transport ID '${verifiedParticipantId}'`);
+    return null;
+  }
+
   // Security role validation: host-only message types
   const hostOnlyTypes: RealtimeMessageType[] = ['POLL_CREATE', 'POLL_CLOSE', 'POLL_UPDATE', 'QA_ANSWER', 'QA_DELETE', 'STATE_SNAPSHOT'];
-  if (hostOnlyTypes.includes(msg.type as RealtimeMessageType) && msg.senderRole !== 'host') {
-    console.warn(`[Security Guard] Rejected unauthorized host-only action '${msg.type}' from viewer '${msg.senderId}'`);
-    return null;
+  if (hostOnlyTypes.includes(msg.type as RealtimeMessageType)) {
+    // 1. Must claim host role
+    if (msg.senderRole !== 'host') {
+      console.warn(`[Security Guard] Rejected unauthorized host-only action '${msg.type}' from viewer '${msg.senderId}'`);
+      return null;
+    }
+
+    // 2. If designated hostId is known, senderId must match verifiedHostId
+    if (verifiedHostId && msg.senderId !== verifiedHostId) {
+      console.warn(`[Security Guard] Rejected host-only action '${msg.type}' from unverified host '${msg.senderId}' (expected '${verifiedHostId}')`);
+      return null;
+    }
   }
 
   return raw as RealtimeMessage;
@@ -154,11 +175,15 @@ export function encodeRealtimeMessage(message: RealtimeMessage): Uint8Array {
 /**
  * Decodes a raw binary buffer received from LiveKit Data Channel.
  */
-export function decodeRealtimeMessage(data: Uint8Array): RealtimeMessage | null {
+export function decodeRealtimeMessage(
+  data: Uint8Array,
+  verifiedParticipantId?: string,
+  verifiedHostId?: string
+): RealtimeMessage | null {
   try {
     const text = new TextDecoder().decode(data);
     const parsed = JSON.parse(text);
-    return validateRealtimeMessage(parsed);
+    return validateRealtimeMessage(parsed, verifiedParticipantId, verifiedHostId);
   } catch (err) {
     console.error('Failed to decode realtime message:', err);
     return null;

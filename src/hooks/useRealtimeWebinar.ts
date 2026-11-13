@@ -22,6 +22,7 @@ interface UseRealtimeWebinarOptions {
   webinarId: string;
   userId: string;
   role: 'host' | 'viewer';
+  hostId?: string;
   livekitRoom?: Room | null;
 }
 
@@ -29,6 +30,7 @@ export function useRealtimeWebinar({
   webinarId,
   userId,
   role,
+  hostId = 'host-user-id',
   livekitRoom,
 }: UseRealtimeWebinarOptions) {
   const store = useInteractiveStore(webinarId);
@@ -216,9 +218,10 @@ export function useRealtimeWebinar({
   useEffect(() => {
     if (!livekitRoom) return;
 
-    const onDataReceived = (payload: Uint8Array, participant?: unknown, kind?: unknown, topic?: string) => {
+    const onDataReceived = (payload: Uint8Array, participant?: { identity?: string }, kind?: unknown, topic?: string) => {
       if (topic && topic !== TOPIC_INTERACTION) return;
-      const msg = decodeRealtimeMessage(payload);
+      const verifiedParticipantId = participant?.identity;
+      const msg = decodeRealtimeMessage(payload, verifiedParticipantId, hostId);
       if (msg && msg.senderId !== userId) {
         handleIncomingMessage(msg);
       }

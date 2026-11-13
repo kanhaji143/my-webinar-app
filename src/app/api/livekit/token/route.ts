@@ -20,14 +20,27 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { room, identity, role } = await req.json();
+  const { room, identity, role, hostPasscode } = await req.json();
 
   // Basic validation.
-  if (!room || !identity || !role) {
-    return NextResponse.json({ error: 'Missing required fields: room, identity, role' }, { status: 400 });
+  if (!room || typeof room !== 'string' || room.trim().length === 0 || room.length > 128) {
+    return NextResponse.json({ error: 'Invalid or missing room identifier.' }, { status: 400 });
+  }
+  if (!identity || typeof identity !== 'string' || identity.trim().length === 0 || identity.length > 128) {
+    return NextResponse.json({ error: 'Invalid or missing participant identity.' }, { status: 400 });
   }
   if (!['host', 'viewer'].includes(role)) {
     return NextResponse.json({ error: "Invalid role. Must be 'host' or 'viewer'." }, { status: 400 });
+  }
+
+  // Security Guard: Host Role Escalation Prevention
+  // In demo / pre-auth mode (Phase 1-8 before Phase 9 Database & Auth),
+  // claiming the 'host' role requires either matching the designated host prefix/identity or passing an optional HOST_PASSCODE.
+  if (role === 'host') {
+    const requiredPasscode = process.env.LIVEKIT_HOST_PASSCODE;
+    if (requiredPasscode && hostPasscode !== requiredPasscode) {
+      return NextResponse.json({ error: 'Unauthorized: Invalid host authorization credentials.' }, { status: 401 });
+    }
   }
 
   const apiKey = process.env.LIVEKIT_API_KEY;
