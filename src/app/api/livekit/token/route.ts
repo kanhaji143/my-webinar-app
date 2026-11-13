@@ -33,13 +33,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid role. Must be 'host' or 'viewer'." }, { status: 400 });
   }
 
-  // Security Guard: Host Role Escalation Prevention
-  // In demo / pre-auth mode (Phase 1-8 before Phase 9 Database & Auth),
-  // claiming the 'host' role requires either matching the designated host prefix/identity or passing an optional HOST_PASSCODE.
+  // Security Guard: Fail-Closed Host Authorization
+  // Never issue a host token when host authorization is not configured on the server.
+  // In pre-auth / standalone mode before Phase 9 Database & Auth, LIVEKIT_HOST_PASSCODE is mandatory for role: 'host'.
   if (role === 'host') {
     const requiredPasscode = process.env.LIVEKIT_HOST_PASSCODE;
-    if (requiredPasscode && hostPasscode !== requiredPasscode) {
-      return NextResponse.json({ error: 'Unauthorized: Invalid host authorization credentials.' }, { status: 401 });
+    if (!requiredPasscode || requiredPasscode.trim().length === 0) {
+      return NextResponse.json(
+        { error: 'Host authorization is not configured on this server. Set LIVEKIT_HOST_PASSCODE.' },
+        { status: 503 }
+      );
+    }
+    if (hostPasscode !== requiredPasscode) {
+      return NextResponse.json(
+        { error: 'Unauthorized: Invalid host authorization credentials.' },
+        { status: 401 }
+      );
     }
   }
 

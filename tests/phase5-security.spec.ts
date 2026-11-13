@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 import {
-  validateRealtimeMessage,
   encodeRealtimeMessage,
   decodeRealtimeMessage,
   RealtimeMessage,
@@ -30,24 +29,56 @@ test.describe('Phase 5 Final Security Audit: Authorization & Data Protection', (
     expect([400, 403]).toContain(resBadRole.status());
   });
 
-  test('2. Token API: prevents casual host role escalation when host authentication is configured', async ({ request }) => {
-    // Attempting to claim host role without authorization
-    const res = await request.post('/api/livekit/token', {
+  test('2. Token API: fail-closed host authorization blocks host tokens when unconfigured or invalid', async ({ request }) => {
+    // Attempting to claim host role without valid authorization
+    // In unconfigured / disabled mode, returns 403 (LiveKit disabled) or 503 (Host passcode unconfigured)
+    const resNoPass = await request.post('/api/livekit/token', {
       data: {
         room: 'webinar-101',
         identity: 'attacker-client',
         role: 'host',
-        hostPasscode: 'wrong-passcode',
       },
     });
 
-    // Guard returns 401 (if passcode set), 403 (if disabled), or validates server policy
-    expect([400, 401, 403, 500]).toContain(res.status());
-    const data = await res.json();
-    expect(data.error).toBeTruthy();
+    // Guard MUST return 401, 403, or 503; NEVER 200 without configured passcode
+    expect([401, 403, 503]).toContain(resNoPass.status());
+    const dataNoPass = await resNoPass.json();
+    expect(dataNoPass.error).toBeTruthy();
+
+    // Attempting host role with incorrect passcode
+    const resWrongPass = await request.post('/api/livekit/token', {
+      data: {
+        room: 'webinar-101',
+        identity: 'attacker-client',
+        role: 'host',
+        hostPasscode: 'incorrect-passcode-attempt',
+      },
+    });
+    expect([401, 403, 503]).toContain(resWrongPass.status());
+    const dataWrongPass = await resWrongPass.json();
+    expect(dataWrongPass.error).toBeTruthy();
   });
 
-  test('3. Data Channel Security: prevents identity spoofing and transport impersonation', async () => {
+  test('3. Token API: viewer token request does not require host passcode', async ({ request }) => {
+    // Viewer tokens must never require hostPasscode
+    const resViewer = await request.post('/api/livekit/token', {
+      data: {
+        room: 'webinar-101',
+        identity: 'viewer-regular-user',
+        role: 'viewer',
+      },
+    });
+
+    // When LiveKit is disabled (in test/demo mode), returns 403; when enabled, returns 200.
+    // It should NEVER return 503 (host passcode missing) or 401 (unauthorized host).
+    expect([200, 403]).toContain(resViewer.status());
+    if (resViewer.status() === 200) {
+      const data = await resViewer.json();
+      expect(data.token).toBeTruthy();
+    }
+  });
+
+  test('4. Data Channel Security: prevents identity spoofing and transport impersonation', async () => {
     const spoofedMessage: RealtimeMessage = {
       version: PROTOCOL_VERSION,
       webinarId: 'webinar-101',
@@ -77,7 +108,7 @@ test.describe('Phase 5 Final Security Audit: Authorization & Data Protection', (
     expect(result).toBeNull();
   });
 
-  test('4. Data Channel Security: rejects unauthorized STATE_SNAPSHOT from non-host participants', async () => {
+  test('5. Data Channel Security: rejects unauthorized STATE_SNAPSHOT and host-only actions from non-host participants', async () => {
     const maliciousSnapshot: RealtimeMessage = {
       version: PROTOCOL_VERSION,
       webinarId: 'webinar-101',
@@ -99,9 +130,23 @@ test.describe('Phase 5 Final Security Audit: Authorization & Data Protection', (
 
     // HostId mismatch: must be rejected to prevent room state wiping
     expect(result).toBeNull();
+
+    // Viewer attempting QA_DELETE
+    const maliciousDelete: RealtimeMessage = {
+      version: PROTOCOL_VERSION,
+      webinarId: 'webinar-101',
+      senderId: 'viewer-participant-1',
+      senderRole: 'host',
+      timestamp: new Date().toISOString(),
+      type: 'QA_DELETE',
+      payload: {
+        questionId: 'q-101',
+      },
+    };
+    expect(decodeRealtimeMessage(encodeRealtimeMessage(maliciousDelete), actualTransportId, verifiedHostId)).toBeNull();
   });
 
-  test('5. Data Channel Security: allows legitimate host operations and legitimate viewer interactions', async () => {
+  test('6. Data Channel Security: allows legitimate host operations and legitimate viewer interactions', async () => {
     const legitimateHostMsg: RealtimeMessage = {
       version: PROTOCOL_VERSION,
       webinarId: 'webinar-101',
