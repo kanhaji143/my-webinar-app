@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, use, Suspense, useRef, useEffect } from 'react';
+import React, { Suspense, useRef, useEffect, useState, use } from 'react';
 import Link from 'next/link';
 import {
   Mic,
@@ -28,6 +28,9 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Badge } from '@/components/Badge';
 import { Button } from '@/components/Button';
 import { DeviceSettingsModal } from '@/components/DeviceSettingsModal';
+import LiveKitRoom from '@/components/LiveKitRoom';
+import LiveKitUsageBanner from '@/components/LiveKitUsageBanner';
+
 import { useWebinarStore, WebinarStatus } from '@/lib/webinarStore';
 import { useLocalMedia } from '@/hooks/useLocalMedia';
 import { useInteractiveStore } from '@/lib/interactiveStore';
@@ -81,6 +84,9 @@ function WebinarHostContent({ params }: HostPageProps) {
   const [activeSideTab, setActiveSideTab] = useState<'chat' | 'participants' | 'polls' | 'qa' | 'recording'>('chat');
   const [transitionError, setTransitionError] = useState<string | null>(null);
   const [isDeviceModalOpen, setIsDeviceModalOpen] = useState(false);
+
+  // Determine if LiveKit integration is enabled (exposed via NEXT_PUBLIC_LIVEKIT_ENABLED)
+  const liveKitEnabled = typeof window !== 'undefined' && process.env.NEXT_PUBLIC_LIVEKIT_ENABLED === 'true';
 
   // Chat local input
   const [chatInput, setChatInput] = useState('');
@@ -193,6 +199,12 @@ function WebinarHostContent({ params }: HostPageProps) {
   return (
     <div className="flex-1 flex flex-col bg-slate-950 text-slate-100 min-h-[calc(100vh-8rem)]">
       {/* Studio Header Bar */}
+      {liveKitEnabled && (
+        <div className="px-4 pt-2">
+          <LiveKitUsageBanner participantsPerSession={totalAttendeeCount || 10} minutesPerSession={duration || 30} sessionsPerMonth={4} />
+          <LiveKitRoom roomName={sessionId} identity={hostName} role="host" />
+        </div>
+      )}
       <div className="border-b border-slate-800 bg-slate-900/80 px-4 py-3 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <Badge
